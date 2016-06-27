@@ -13,5 +13,8 @@
     "gmail.js",
     "main.js"
   ],
+  "permissions": [
+  "http://*.google.com/"
+],
   "manifest_version": 2
 }
