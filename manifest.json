@@ -1,20 +1,29 @@
 {
-  "name": "Gmail.js",
+  "name": "LocalAppExt",
   "version": "0.1",
   "description": "Hello World Gmail chrome extension",
   "content_scripts": [
     {
-      "matches": ["https://mail.google.com/*"],
-      "js": ["content.js"]
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "jquery-ui.css"
+      ]
     }
   ],
   "web_accessible_resources": [
     "jquery-1.10.2.min.js",
+    "jquery-ui.js",
+    "jquery-ui.css",
     "gmail.js",
     "main.js"
   ],
   "permissions": [
-  "http://*.google.com/"
-],
+    "http://*.google.com/"
+  ],
   "manifest_version": 2
 }

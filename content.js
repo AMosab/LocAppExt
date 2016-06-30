@@ -1,3 +1,6 @@
+var u = document.createElement('script');
+u.src = chrome.extension.getURL('jquery-ui.js');
+(document.head || document.documentElement).appendChild(u);
 
 var j = document.createElement('script');
 j.src = chrome.extension.getURL('jquery-1.10.2.min.js');

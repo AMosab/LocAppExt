@@ -1,7 +1,42 @@
 var gmail;
-var subject;
+var email_subject;
+var sender_email;
 var data_id;
 var data;
+var email_plain_body;
+
+
+function getRfqKeywords() {
+    var _url = rootAppName + "RFQ/getRFQKeywords";
+    var rfqKeywordList;
+    $.ajax({
+        type: 'post',
+        url: _url,
+        async: false,
+        success: function (jsonResponse) {
+            rfqKeywordList = jsonResponse;
+        }
+    });
+    return rfqKeywordList;
+}
+
+function addAutocompleteToSearch() {
+    var rfqKeywordList = getRfqKeywords();
+    $('#rfqFilterSearch').autocompleter({
+        highlightMatches: true,
+        source: rfqKeywordList,
+        template: '{{ label }}',
+        empty: false,
+        limit: 10,
+        callback: function (value, index, selected) {
+            if (selected) {
+                $('#rfqFilterSearch').val(selected.label);
+                $('#hiddenSearchInput').val(selected.id);
+                searchAllRfqsAndOrders();
+            }
+        }
+    });
+}
 
 
 function refresh(f) {
@@ -18,43 +53,38 @@ var main = function () {
 
 
   gmail.observe.on("open_email", function (id, url, body, xhr) {
-    console.log('trololooaoaojaoajojaoj');
     function reqListener() {
       console.log(this.responseText);
     }
-console.log('bew')
+
+    //ajax REST request test
     var oReq = new XMLHttpRequest();
     oReq.addEventListener("load", reqListener);
     oReq.open("GET", "https://api.predic8.de/shop/");
     oReq.send();
-    debugger;
 
-    subject = gmail.get.email_subject();
-    debugger;
     data_id = gmail.get.email_data(id);
-    data = gmail.get.email_data();
-    console.log('email subject:' + data_id.subject)
-    //console.log("email data id: " + data_id);
-    console.log("sender email: " + data_id.people_involved[0][1]);//0 is description
-    debugger
-    console.log("email html body: " + data_id.content_plain);
-    //console.log('xhr ' + xhr);
-    console.log(id);
-    //var stocktest = httpGet('http://www.google.com/finance/info?q=NASDAQ:GOOG');
+    email_subject = data_id.subject;
+    sender_email = data_id.people_involved[0][1];//0 is description
+    email_plain_body = data_id.threads[id].content_plain;
 
-    //console.log('email data S: ' + JSON.stringify(gmail.get.selected_emails_data()))
-    //console.log('email data: ' + gmail.get.emails_data())
-    //console.log("my email " + gmail.get.user_email());
-    //console.log("visible_emails " + JSON.stringify(gmail.get.visible_emails()));
 
-    // Inject a toolbar:
-    var $email_body = gmail.dom.email_body();
-    console.log("body  " + gmail.get.displayed_email_data());
-    $('.hi').append('<div class="atest"><a>This is a test</a></br></br></br></br>' +
-      '<a>This another test</a></div>');
-    //$email_body.prepend('<div class="toto"><a>Do somethingoooooooooooooooooooooo</a></div>');
+
+    $('.hi').append('<div class="nH hh"><iframe src="https://www.localapplicant.com/dashboard"></iframe></div>');
+
+    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="http://cluster006.ovh.net/~synaptiq/synaptique/images/logo-syn.png" height="16"><span class="cZ">Synaptique extension_test</span><span class="cU"> - Stay up to date!</span>'
+      + '</br></br><span class="cU">Hi ' + gmail.get.user_email() + ' </br></br><button type="button">Sing in</button></span></div><div class="cT"></div></div><div></div></div></div>');
+    $('.hi').append("<div class=\"ui-widget\"><label for=\"Item Id\">Ids: </label><input id=\"rfqFilterSearch\"></div>");
+
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp"
+    ];
+    $("#rfqFilterSearch").autocomplete({
+      source: availableTags
+    });
   });
 }
-
 
 refresh(main);
