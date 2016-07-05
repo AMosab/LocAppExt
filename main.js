@@ -55,7 +55,7 @@ function getRfqKeywords() {
     async: false,
     complete: function (xmlHttp) {
       // xmlHttp is a XMLHttpRquest object
-      //alert(xmlHttp.status);
+      //alert(xmlHttp.status); //use status to identify if the user is logged in
     },
     success: function (jsonResponse) {
       rfqKeywordList = jsonResponse;
@@ -150,28 +150,13 @@ var main = function () {
 //excute each time the user open an email
   gmail.observe.on("open_email", function (id, url, body, xhr) {
 
-    
-    function reqListener() {
-      console.log(this.responseText);
-      console.log(this.status);
-
-    }
-
-    //ajax REST request test
-    var oReq = new XMLHttpRequest();
-    oReq.addEventListener("load", reqListener);
-    //oReq.withCredentials = true;
-    oReq.open("POST", "https://api.predic8.de/shop/");
-    //oReq.send();
-
     data_id = gmail.get.email_data(id);
     email_subject = data_id.subject;
     sender_email = data_id.people_involved[0][1]; //0 is description
     email_plain_body = data_id.threads[id].content_plain;
 
 
-
-    //$('.hi').append('<div class="nH hh"><iframe src="https://www.localapplicant.com/dashboard"></iframe></div>');
+    //dummyframe is used to prevent redirection upon submmiting the form
     $('.hi').append('<iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>');
 
     $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="http://cluster006.ovh.net/~synaptiq/synaptique/images/logo-syn.png" height="16"><span class="cZ">Synaptique extension_test</span><span class="cU"> - Stay up to date!</span>'
