@@ -1,0 +1,29 @@
+.hi_synap input[type=text], select {
+    width: 100%;
+    padding: 6px 8px;
+    margin: 0px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.hi_synap input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 8px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.hi_synap input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.hi_synap div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 8px;
+}

@@ -11,7 +11,9 @@
         "content.js"
       ],
       "css": [
-        "jquery-ui.css"
+        "jquery-ui.css",
+        "style.css",
+        "jquery.autocompleter.css"
       ]
     }
   ],
@@ -19,7 +21,9 @@
     "jquery-1.10.2.min.js",
     "jquery.autocompleter.min.js",
     "jquery-ui.js",
+    "style.css",
     "jquery-ui.css",
+    "jquery.autocompleter.css",
     "gmail.js",
     "tests/jso.js",
     "tests/modal.js",
