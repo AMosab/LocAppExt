@@ -18,6 +18,7 @@
     }
   ],
   "web_accessible_resources": [
+    "images/*.png",
     "jquery-1.10.2.min.js",
     "jquery.autocompleter.min.js",
     "jquery-ui.js",

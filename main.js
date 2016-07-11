@@ -12,11 +12,11 @@ var availableTags = [
 ];
 
 var isdebug = false;
-
+var imgurl = "";
 //ease changing between developement modes
 function bug(isdebug) {
   if (isdebug) {
-    bug(isdebug);
+    debugger;
   }
   else {
     //todo
@@ -68,8 +68,10 @@ function getRfqKeywords() {
 
 
 function addAutocompleteToSearch() {
+  var rfqKeywordList = getRfqKeywords();//uncomment this when working online(not locally)
+
   var filtered = [];
-  json.forEach(function (item) {
+  rfqKeywordList.forEach(function (item) {
     console.log(item);
     if (item.id.substring(0, 2) == "it") {
       filtered.push(item)
@@ -81,11 +83,10 @@ function addAutocompleteToSearch() {
   console.log(arr);
   bug(isdebug);
 
-  var rfqKeywordList = arr;
-  //var rfqKeywordList = getRfqKeywords();//uncomment this when working online(not locally)
+  //var rfqKeywordList = arr;
 
   $('#rfqFilterSearch').autocompleter({ //jquery autocompleter
-    source: rfqKeywordList,
+    source: arr,
     highlightMatches: true,
     hint: true,
     empty: false,
@@ -96,9 +97,9 @@ function addAutocompleteToSearch() {
       if (selected) {
         console.log(selected.label);
         console.log(selected.id);
-        //showUpdateModal(selected.id);https://www.localapplicant.com/item/getOrderDetailModal?id=it227
+        showUpdateModal(selected.id);//https://www.localapplicant.com/item/getOrderDetailModal?id=it227
         //$('.hi_synap').html('<div class="nH hh"><iframe id="Iframe_synap" src="https://www.localapplicant.com/item/getOrderDetailModal?id=it227" onload="iframeLoaded()"></iframe></div>');
-        $('.hi_synap_i').html(fmodal);
+        //$('.hi_synap_i').html(fmodal);
       }
     }
   });
@@ -119,15 +120,13 @@ function showUpdateModal(id) {
       id: id
     },
     success: function (response) {
-      $('.overlay-ajax').hide();
-      $('.hi').append(response);
-      $('#errorOrderDetailSingle').hide();
-      $('#successOrderDetailSingle').hide();
-      $('.hi').append('show');
-      $('#itemId').val(id);
+      $('.synap_update').html("<form ACTION=\"https://www.localapplicant.com/item/saveOrderDetail?id=" + id + "?\" METHOD=\"POST\" target=\"dummyframe\"><div class=\"hi_synap_i\"></div></form>");
+      $('.hi_synap_i').html(response + "<input type=\"submit\" value=\"Submit\">");
+      bug(isdebug);
+
     },
     failure: function () {
-      $('.overlay-ajax').hide();
+      console.log('error! no response')
     }
   });
 }
@@ -147,7 +146,7 @@ var main = function () {
 
   gmail = new Gmail();
 
-//excute each time the user open an email
+  //excute each time the user open an email
   gmail.observe.on("open_email", function (id, url, body, xhr) {
 
     data_id = gmail.get.email_data(id);
@@ -158,15 +157,26 @@ var main = function () {
 
     //dummyframe is used to prevent redirection upon submmiting the form
     $('.hi').append('<iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>');
-
-    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="http://cluster006.ovh.net/~synaptiq/synaptique/images/logo-syn.png" height="16"><span class="cZ">Synaptique extension_test</span><span class="cU"> - Stay up to date!</span>'
+    //console.log(chrome.extension.getURL("/images/logo.png"));
+    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="'+ imgurl + '" height="16"><span class="cZ">Synaptique extension_test</span><span class="cU"> - Stay up to date!</span>'
       + '</br></br></div><div class="cT"></div></div><div></div><div class=\"hi_synap\"><label for=\"rfqFilterSearch\">Search for an Item: </label></br><input id=\"rfqFilterSearch\"></div></div></div>');
-    $('.hi').append("<form ACTION=\"http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi\" METHOD=\"POST\" target=\"dummyframe\"><div class=\"hi_synap_i\"></div></form>");
+    $('.hi').append("<div class=\"synap_update\"></div>");
 
 
-    addAutocompleteToSearch();
   });
 }
+
+//get absolute urls from content script
+document.addEventListener('passurl', function (e)
+{
+    imgurl=e.detail;
+    console.log("received "+url);
+});
+
+$('#rfqFilterSearch').on('input', function() {
+    addAutocompleteToSearch();
+});
+
 
 //the trigger(the first line to get excuted)
 refresh(main);

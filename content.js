@@ -18,12 +18,21 @@ g.src = chrome.extension.getURL('gmail.js');
 
 var d = document.createElement('script');
 d.src = chrome.extension.getURL('tests/jso.js');
-(document.head || document.documentElement).appendChild(d);
+//(document.head || document.documentElement).appendChild(d);
 
 var m = document.createElement('script');
 m.src = chrome.extension.getURL('tests/modal.js');
-(document.head || document.documentElement).appendChild(m);
+//(document.head || document.documentElement).appendChild(m);
 
 var s = document.createElement('script');
 s.src = chrome.extension.getURL('main.js');
 (document.head || document.documentElement).appendChild(s);
+
+s.onload = function(){
+
+  var url=chrome.runtime.getURL("images/logo.png");
+
+  var evt=document.createEvent("CustomEvent");
+  evt.initCustomEvent("passurl", true, true, url);
+  document.dispatchEvent(evt);
+};
