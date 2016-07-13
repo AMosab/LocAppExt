@@ -25,6 +25,8 @@ function bug(isdebug) {
 
 function meback(result) {
   debugger
+  $("#rfqFilterSearch").focus();
+
   $(".synap_loading").toggle();
 
 }
@@ -64,13 +66,15 @@ function callme(response, meback) {
       if (selected) {
         console.log(selected.label);
         console.log(selected.id);
+        $(".synap_loading").toggle();
+
         showUpdateModal(selected.id);//https://www.localapplicant.com/item/getOrderDetailModal?id=it227
         //$('.hi_synap').html('<div class="nH hh"><iframe id="Iframe_synap" src="https://www.localapplicant.com/item/getOrderDetailModal?id=it227" onload="iframeLoaded()"></iframe></div>');
         //$('.hi_synap_i').html(fmodal);
       }
     }
   });
-        debugger;
+  debugger;
 
   meback(true);
 
@@ -118,7 +122,7 @@ function getRfqKeywords(callme) {
       else {
         response = "network error";
       }
-            debugger;
+      debugger;
 
       callme(response, meback);
 
@@ -133,7 +137,6 @@ function getRfqKeywords(callme) {
 
 function addAutocompleteToSearch() {
   $("#rfqFilterSearch").blur();
-  $("#rfqFilterSearch").focus();
 
 
   getRfqKeywords(callme);
@@ -156,9 +159,10 @@ function showUpdateModal(id) {
     data: {
       id: id
     },
-    async: false,
     datatype: "html",
     success: function (response) {
+      $(".synap_loading").toggle();
+
       $('.synap_update').html("<form ACTION=\"https://www.localapplicant.com/item/saveOrderDetail?id=" + id + "?\" METHOD=\"POST\" target=\"dummyframe\"><div class=\"hi_synap_i\"></div></form>");
       $('.hi_synap_i').html($(response).find('.block clearfix').text() + "<input type=\"submit\" value=\"Submit\">");
 
