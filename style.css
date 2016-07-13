@@ -137,5 +137,5 @@ input style
 .error {
     color: crimson;
     padding-left: 30px;
-    font: 10px;
+    font-size: 10px;
 }

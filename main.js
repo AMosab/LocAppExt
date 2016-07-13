@@ -23,71 +23,19 @@ function bug(isdebug) {
   }
 }
 
-
-//adjust the iframe height after done loading
-function iframeLoaded() {
-  bug(isdebug);
-  var iFrameID = document.getElementById('Iframe_synap');
-  if (iFrameID) {
-    // here you can make the height, I delete it first, then I make it again
-    console.log(iFrameID.height)
-    bug(isdebug);
-    iFrameID.height = "";
-    console.log(iFrameID.height)
-    iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
-    console.log(iFrameID.height)
-
-  }
-}
-
-//fetch the Keywords list from the server
-function getRfqKeywords() {
-  var response;
-  var _url = rootAppName + "RFQ/getRFQKeywords";
-  var rfqKeywordList;
-  $.ajax({
-    type: 'post',
-    url: _url,
-    data: "",
-    xhrFields: {
-      withCredentials: true
-    },
-    async: false,
-    complete: function (xmlHttp) {
-      // xmlHttp is a XMLHttpRquest object
-      if (xmlHttp.status == 0) {
-        response = 0;
-
-      }
-      else if (xmlHttp.status == 200) {
-        response = xmlHttp.responseJSON;
-      }
-      else {
-        response = "network error";
-      }
-
-    }
-  });
-  return response;
+function meback(result) {
+  debugger
+  $(".synap_loading").toggle();
 
 }
 
-
-
-
-function addAutocompleteToSearch() {
-  $("#rfqFilterSearch").blur();
-  $("#rfqFilterSearch").focus();
-
-  loaded = true;
-
-  var rfqKeywordList = getRfqKeywords();//uncomment this when working online(not locally)
-
+function callme(response, meback) {
+  var rfqKeywordList = response;
   if (rfqKeywordList == 0) {
     console.log('outta here')
     $('.synap_update').html('<div class="error">       you need to login to your LocalApplicant acount first!</div>');
 
-    return false;
+    meback(false);
 
   }
   var filtered = [];
@@ -111,7 +59,6 @@ function addAutocompleteToSearch() {
     hint: true,
     empty: false,
     limit: 10,
-    async: false,
     callback: function (value, index, selected) {
       bug(isdebug);
       if (selected) {
@@ -123,6 +70,73 @@ function addAutocompleteToSearch() {
       }
     }
   });
+        debugger;
+
+  meback(true);
+
+
+}
+
+//adjust the iframe height after done loading
+function iframeLoaded() {
+  bug(isdebug);
+  var iFrameID = document.getElementById('Iframe_synap');
+  if (iFrameID) {
+    // here you can make the height, I delete it first, then I make it again
+    console.log(iFrameID.height)
+    bug(isdebug);
+    iFrameID.height = "";
+    console.log(iFrameID.height)
+    iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
+    console.log(iFrameID.height)
+
+  }
+}
+
+//fetch the Keywords list from the server
+function getRfqKeywords(callme) {
+  var response;
+  var _url = rootAppName + "RFQ/getRFQKeywords";
+  var rfqKeywordList;
+  $.ajax({
+    type: 'post',
+    url: _url,
+    data: "",
+    xhrFields: {
+      withCredentials: true
+    },
+    complete: function (xmlHttp) {
+      // xmlHttp is a XMLHttpRquest object
+      if ((xmlHttp.status == 0) || (xmlHttp.status == 302)) {
+        console.log("xmlHttp.status " + xmlHttp.status);
+        response = 0;
+
+      }
+      else if (xmlHttp.status == 200) {
+        response = xmlHttp.responseJSON;
+      }
+      else {
+        response = "network error";
+      }
+            debugger;
+
+      callme(response, meback);
+
+
+    }
+  });
+
+}
+
+
+
+
+function addAutocompleteToSearch() {
+  $("#rfqFilterSearch").blur();
+  $("#rfqFilterSearch").focus();
+
+
+  getRfqKeywords(callme);
 
 
 
@@ -188,13 +202,11 @@ var main = function () {
     $('#rfqFilterSearch').one('focus', function () {
 
       debugger
-      
+
       $(".synap_loading").toggle();
 
       debugger
       addAutocompleteToSearch();
-      debugger;
-      $(".synap_loading").toggle();
 
 
     })
