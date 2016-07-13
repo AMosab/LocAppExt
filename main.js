@@ -5,14 +5,14 @@ var data_id;
 var data;
 var email_plain_body;
 var rootAppName = "https://www.localapplicant.com/"//staging.synaptique.com
-var availableTags = [
-  "ActionScript",
-  "AppleScript",
-  "Asp"
-];
 
 var isdebug = false;
-var imgurl = "";
+var logo_url = "";
+var loading_url = "";
+var black_png = "";
+var loaded = false;
+
+
 //ease changing between developement modes
 function bug(isdebug) {
   if (isdebug) {
@@ -42,9 +42,9 @@ function iframeLoaded() {
 
 //fetch the Keywords list from the server
 function getRfqKeywords() {
+  var response;
   var _url = rootAppName + "RFQ/getRFQKeywords";
   var rfqKeywordList;
-
   $.ajax({
     type: 'post',
     url: _url,
@@ -55,21 +55,41 @@ function getRfqKeywords() {
     async: false,
     complete: function (xmlHttp) {
       // xmlHttp is a XMLHttpRquest object
-      //alert(xmlHttp.status); //use status to identify if the user is logged in
-    },
-    success: function (jsonResponse) {
-      rfqKeywordList = jsonResponse;
+      if (xmlHttp.status == 0) {
+        response = 0;
+
+      }
+      else if (xmlHttp.status == 200) {
+        response = xmlHttp.responseJSON;
+      }
+      else {
+        response = "network error";
+      }
+
     }
   });
-  return rfqKeywordList;
+  return response;
+
 }
 
 
 
 
 function addAutocompleteToSearch() {
+  $("#rfqFilterSearch").blur();
+  $("#rfqFilterSearch").focus();
+
+  loaded = true;
+
   var rfqKeywordList = getRfqKeywords();//uncomment this when working online(not locally)
 
+  if (rfqKeywordList == 0) {
+    console.log('outta here')
+    $('.synap_update').html('<div class="error">       you need to login to your LocalApplicant acount first!</div>');
+
+    return false;
+
+  }
   var filtered = [];
   rfqKeywordList.forEach(function (item) {
     console.log(item);
@@ -91,7 +111,7 @@ function addAutocompleteToSearch() {
     hint: true,
     empty: false,
     limit: 10,
-
+    async: false,
     callback: function (value, index, selected) {
       bug(isdebug);
       if (selected) {
@@ -103,13 +123,16 @@ function addAutocompleteToSearch() {
       }
     }
   });
+
+
+
 }
 
 
-//fetch the update Modal and desplay it
+//fetch the update Modal and display it
 function showUpdateModal(id) {
-  $('.overlay-ajax').show();
   var url_ = rootAppName + "item/getOrderDetailModal";
+
   $.ajax({
     type: 'post',
     url: url_,
@@ -119,14 +142,12 @@ function showUpdateModal(id) {
     data: {
       id: id
     },
+    async: false,
+    datatype: "html",
     success: function (response) {
       $('.synap_update').html("<form ACTION=\"https://www.localapplicant.com/item/saveOrderDetail?id=" + id + "?\" METHOD=\"POST\" target=\"dummyframe\"><div class=\"hi_synap_i\"></div></form>");
-      $('.hi_synap_i').html(response + "<input type=\"submit\" value=\"Submit\">");
-      bug(isdebug);
+      $('.hi_synap_i').html($(response).find('.block clearfix').text() + "<input type=\"submit\" value=\"Submit\">");
 
-    },
-    failure: function () {
-      console.log('error! no response')
     }
   });
 }
@@ -158,25 +179,58 @@ var main = function () {
     //dummyframe is used to prevent redirection upon submmiting the form
     $('.hi').append('<iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>');
     //console.log(chrome.extension.getURL("/images/logo.png"));
-    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="'+ imgurl + '" height="16"><span class="cZ">Synaptique extension_test</span><span class="cU"> - Stay up to date!</span>'
-      + '</br></br></div><div class="cT"></div></div><div></div><div class=\"hi_synap\"><label for=\"rfqFilterSearch\">Search for an Item: </label></br><input id=\"rfqFilterSearch\"></div></div></div>');
+    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="' + logo_url + '" height="16"><span class="cZ">Gmail Extension</span><span class="cU"> - Stay up to date!</span>'
+      + '</br></br></div><div class="cT"></div></div><div></div><div class=\"hi_synap\"><label for=\"rfqFilterSearch\">Search for an Item: </label></br><input name= \"synap_input\" id=\"rfqFilterSearch\"></div></div></div>');
+    $('.hi').append('<div class="synap_loading" ><img src="' + loading_url + '" width="64" height="64"/></div>')
     $('.hi').append("<div class=\"synap_update\"></div>");
 
+    loaded = false;
+    $('#rfqFilterSearch').one('focus', function () {
+
+      debugger
+      
+      $(".synap_loading").toggle();
+
+      debugger
+      addAutocompleteToSearch();
+      debugger;
+      $(".synap_loading").toggle();
+
+
+    })
+    $('#rfqFilterSearch').select(function () {
+      console.log('okioa')
+
+    })
+
+    $(document).ajaxStart(function () {
+      // $(".synap_loading").toggle();
+    });
+    $(document).ajaxComplete(function () {
+      // $(".synap_loading").toggle();
+    });
 
   });
 }
 
 //get absolute urls from content script
-document.addEventListener('passurl', function (e)
-{
-    imgurl=e.detail;
-    console.log("received "+url);
+document.addEventListener('passurl', function (e) {
+
+  logo_url = e.detail[0].logo_url;
+  loading_url = e.detail[0].loading_url;
+  black_png = e.detail[0].black_png;
+  console.log("received " + logo_url);
 });
 
-$('#rfqFilterSearch').on('input', function() {
-    addAutocompleteToSearch();
+
+$(document).ready(function () {
+  console.log('in ready');
+
+
 });
 
 
-//the trigger(the first line to get excuted)
+
+//the trigger(first line to get excuted)
 refresh(main);
+

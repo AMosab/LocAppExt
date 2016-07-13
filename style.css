@@ -13,8 +13,8 @@ select {
     background-color: #4CAF50;
     color: white;
     padding: 6px 8px;
-    margin-bottom:  10px;
-    margin-left:  10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -106,6 +106,7 @@ select {
     display: none;
 }
 
+
 /*
 input style
 */
@@ -116,7 +117,7 @@ input style
 }
 
 .hi_synap input {
-    margin-bottom:  10px;
+    margin-bottom: 10px;
     width: 100%;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -125,4 +126,16 @@ input style
     font-size: 16px;
     padding: 0 12px;
     border: 0;
+}
+
+.synap_loading {
+    display: none;
+    z-index: 300;
+
+}
+
+.error {
+    color: crimson;
+    padding-left: 30px;
+    font: 10px;
 }
