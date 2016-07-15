@@ -254,7 +254,7 @@ function synap_submit() {
   console.log(formData);
   $.ajax({
     type: "post",
-    url: rootAppName + "item/saveOrderDetail?id=" + 929,//current_id
+    url: rootAppName + "item/saveOrderDetail?id=" + 962,//current_id
     data: formData,
     xhrFields: {
       withCredentials: true
@@ -282,7 +282,7 @@ function showUpdateModal(id) {
       withCredentials: true
     },
     data: {
-      id: 929 //id
+      id: 962 //id
     },
     datatype: "html",
     success: function (response) {
@@ -297,10 +297,10 @@ function showUpdateModal(id) {
 
       }
       $('.hi_synap_i').html(res_html + "<input type=\"button\" value=\"Submit\" onclick=\"synap_submit()\">");//$(response).find('.block clearfix').text()
-      $("#submissionTarget").datepicker({   dateFormat: "dd-mm-yy" });;
-      $("#submissionEffective").datepicker({   dateFormat: "dd-mm-yy" });;
-      $("#completionTarget").datepicker({   dateFormat: "dd-mm-yy" });;//comment
-      $("#completionEffective").datepicker({   dateFormat: "dd-mm-yy" });;
+      $("#submissionTarget").datepicker({   dateFormat: "dd/mm/yy" });;
+      $("#submissionEffective").datepicker({   dateFormat: "dd/mm/yy" });;
+      $("#completionTarget").datepicker({   dateFormat: "dd/mm/yy" });;//comment
+      $("#completionEffective").datepicker({   dateFormat: "dd/mm/yy" });;
       $('.hi_synap_i #logo').attr("src", "blawwawg");
       $('.hi_synap_i #comment').css("width", "40%")
       getUsersList(cbUsersList);
