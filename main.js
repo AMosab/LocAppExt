@@ -4,7 +4,7 @@ var sender_email;
 var data_id;
 var data;
 var email_plain_body;
-var rootAppName = "https://www.localapplicant.com/"//staging.synaptique.com
+var rootAppName = "https://staging.synaptique.com:8443/"//staging.synaptique.com
 
 var isdebug = false;
 var logo_url = "";
@@ -120,7 +120,7 @@ function cbUsersList(response) {
           console.log(selected.id);
           current_user_id = selected.id;
           $('#assignToId').val(selected.label)
-              debugger;
+          debugger;
 
 
         }
@@ -243,14 +243,18 @@ function addAutocompleteToSearch() {
 function synap_submit() {
   $(".synap_loading1").toggle();
 
-  var formData = JSON.stringify($("#synap_form").serializeArray());
+  //var formData = JSON.stringify($("#synap_form").serializeArray());
+  var formData = {};
+  $.each($('#synap_form').serializeArray(), function () {
+    formData[this.name] = this.value;
+  });
   // formData = JSON.parse(formData);
   // formData.assignToId = current_user_id;
   // formData = JSON.stringify(formData);
   console.log(formData);
   $.ajax({
     type: "post",
-    url: "https://www.localapplicant.com/item/saveOrderDetail?id=" + current_id,//ACTION=\"https://www.localapplicant.com/item/saveOrderDetail?id=" + id + "?\" METHOD=\"POST\"
+    url: rootAppName + "item/saveOrderDetail?id=" + 929,//current_id
     data: formData,
     xhrFields: {
       withCredentials: true
@@ -278,7 +282,7 @@ function showUpdateModal(id) {
       withCredentials: true
     },
     data: {
-      id: id
+      id: 929 //id
     },
     datatype: "html",
     success: function (response) {
@@ -293,11 +297,12 @@ function showUpdateModal(id) {
 
       }
       $('.hi_synap_i').html(res_html + "<input type=\"button\" value=\"Submit\" onclick=\"synap_submit()\">");//$(response).find('.block clearfix').text()
-      $("#submissionTarget").datepicker();
-      $("#submissionEffective").datepicker();
-      $("#completionTarget").datepicker();
-      $("#completionEffective").datepicker();
-      $('#field8').find('.logo').attr("src", bulb_url);
+      $("#submissionTarget").datepicker({   dateFormat: "dd-mm-yy" });;
+      $("#submissionEffective").datepicker({   dateFormat: "dd-mm-yy" });;
+      $("#completionTarget").datepicker({   dateFormat: "dd-mm-yy" });;//comment
+      $("#completionEffective").datepicker({   dateFormat: "dd-mm-yy" });;
+      $('.hi_synap_i #logo').attr("src", "blawwawg");
+      $('.hi_synap_i #comment').css("width", "40%")
       getUsersList(cbUsersList);
       $(".synap_loading").toggle();
 
