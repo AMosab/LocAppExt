@@ -1,14 +1,18 @@
 //this script is used to load all the javascript files in the project
 /***************************************************************/
+
 var j = document.createElement('script');
 j.src = chrome.extension.getURL('jquery-1.10.2.min.js');
 (document.head || document.documentElement).appendChild(j);
 
-// var u = document.createElement('script');
-// u.src = chrome.extension.getURL('jquery-ui.js');
-// (document.head || document.documentElement).appendChild(u);
+
 j.onload = function () {
-    var c = document.createElement('script');
+    
+    var u = document.createElement('script');
+    u.src = chrome.extension.getURL('jquery-ui.js');
+    (document.head || document.documentElement).appendChild(u);
+u.onload = function () {
+       var c = document.createElement('script');
     c.src = chrome.extension.getURL('jquery.autocompleter.min.js');
     (document.head || document.documentElement).appendChild(c);
 
@@ -34,6 +38,7 @@ j.onload = function () {
         urls.push({
             logo_url: chrome.runtime.getURL("images/logo.png"),
             loading_url: chrome.runtime.getURL("images/loading.gif"),
+            bulb_url: chrome.runtime.getURL("images/bulb.png"),
             black_png: chrome.runtime.getURL("images/black.png")
         })
 
@@ -44,6 +49,8 @@ j.onload = function () {
         document.dispatchEvent(evt);
 
     };
+}
+ 
 };
 
 

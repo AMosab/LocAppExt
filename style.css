@@ -133,6 +133,11 @@ input style
     z-index: 300;
 
 }
+.synap_loading1 {
+    display: none;
+    z-index: 300;
+
+}
 
 .error {
     color: crimson;
