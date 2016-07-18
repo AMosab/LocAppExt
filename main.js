@@ -4,7 +4,7 @@ var sender_email;
 var data_id;
 var data;
 var email_plain_body;
-var rootAppName = "https://staging.synaptique.com:8443/"//staging.synaptique.com
+var rootAppName = "https://staging.synaptique.com:8443/" //staging.synaptique.com
 
 var isdebug = false;
 var logo_url = "";
@@ -19,8 +19,7 @@ var current_user_id = 0;
 function bug(isdebug) {
   if (isdebug) {
     debugger;
-  }
-  else {
+  } else {
     //todo
   }
 }
@@ -40,18 +39,17 @@ function cbRfqKeywords(response, ccbRfqKeywords) {
 
     ccbRfqKeywords(false);
 
-  }
-  else if (rfqKeywordList == -1) {
+  } else if (rfqKeywordList == -1) {
     console.log(rfqKeywordList);
   } else {
-    var filtered = [];
-    rfqKeywordList.forEach(function (item) {
-      console.log(item);
-      if (item.id.substring(0, 2) == "it") {
-        filtered.push(item)
-      }
-    });
-    var arr = $.map(filtered, function (el) {
+    // var filtered = [];
+    // rfqKeywordList.forEach(function(item) {
+    //   console.log(item);
+    //   if (item.id.substring(0, 2) == "it") {
+    //     filtered.push(item)
+    //   }
+    // });
+    var arr = $.map(rfqKeywordList, function(el) {
       return el
     });
     console.log(arr);
@@ -65,14 +63,14 @@ function cbRfqKeywords(response, ccbRfqKeywords) {
       hint: true,
       empty: false,
       limit: 10,
-      callback: function (value, index, selected) {
+      callback: function(value, index, selected) {
         bug(isdebug);
         if (selected) {
           console.log(selected.label);
           console.log(selected.id);
           $(".synap_loading").toggle();
 
-          showUpdateModal(selected.id);//https://www.localapplicant.com/item/getOrderDetailModal?id=it227
+          showUpdateModal(selected.id); //https://www.localapplicant.com/item/getOrderDetailModal?id=it227
 
           //$('.hi_synap').html('<div class="nH hh"><iframe id="Iframe_synap" src="https://www.localapplicant.com/item/getOrderDetailModal?id=it227" onload="iframeLoaded()"></iframe></div>');
           //$('.hi_synap_i').html(fmodal);
@@ -94,12 +92,11 @@ function cbUsersList(response) {
     console.log('outta here')
     $('.synap_update').html('<div class="error">you need to login to your LocalApplicant acount first!</div>');
 
-  }
-  else if (keywordsList == -1) {
+  } else if (keywordsList == -1) {
     console.log(keywordsList);
   } else {
 
-    var arr = $.map(keywordsList, function (el) {
+    var arr = $.map(keywordsList, function(el) {
       return el
     });
     console.log("users " + arr);
@@ -113,7 +110,7 @@ function cbUsersList(response) {
       hint: true,
       empty: false,
       limit: 10,
-      callback: function (value, index, selected) {
+      callback: function(value, index, selected) {
         bug(isdebug);
         if (selected) {
           console.log(selected.label);
@@ -154,7 +151,7 @@ function iframeLoaded() {
 //fetch the Keywords list from the server
 function getRfqKeywords(cbRfqKeywords) {
   var response;
-  var _url = rootAppName + "RFQ/getRFQKeywords";
+  var _url = rootAppName + "RFQ/getItemsKeywords";
   var rfqKeywordList;
   $.ajax({
     type: 'post',
@@ -163,17 +160,15 @@ function getRfqKeywords(cbRfqKeywords) {
     xhrFields: {
       withCredentials: true
     },
-    complete: function (xmlHttp) {
+    complete: function(xmlHttp) {
       // xmlHttp is a XMLHttpRquest object
       if ((xmlHttp.status == 0) || (xmlHttp.status == 302)) {
         console.log("xmlHttp.status " + xmlHttp.status);
         response = 0;
 
-      }
-      else if (xmlHttp.status == 200) {
+      } else if (xmlHttp.status == 200) {
         response = xmlHttp.responseJSON;
-      }
-      else {
+      } else {
         response = -1;
       }
 
@@ -190,24 +185,22 @@ function getUsersList(cb) {
   var response;
   var _url = rootAppName + "RFQ/getUserList";
   var usersList;
-  /*$.ajax({
+  $.ajax({
     type: 'post',
     url: _url,
     data: "",
     xhrFields: {
       withCredentials: true
     },
-    complete: function (xmlHttp) {
+    complete: function(xmlHttp) {
       // xmlHttp is a XMLHttpRquest object
       if ((xmlHttp.status == 0) || (xmlHttp.status == 302)) {
         console.log("xmlHttp.status " + xmlHttp.status);
         response = 0;
 
-      }
-      else if (xmlHttp.status == 200) {
+      } else if (xmlHttp.status == 200) {
         response = xmlHttp.responseJSON;
-      }
-      else {
+      } else {
         response = -1;
       }
       debugger;
@@ -216,18 +209,18 @@ function getUsersList(cb) {
 
 
     }
-  });*/
-  var res = [
-    {
-      id: 107,
-      label: "User 2 dev buyer one (u2.devbuyer1@realtimetypeapprovals.com)"
-    },
-    {
-      id: 103,
-      label: "dev hmida (devbuyer1@synaptique.com)"
-    }
-  ]
-  cb(res);
+  });
+  // var res = [
+  //   {
+  //     id: 107,
+  //     label: "User 2 dev buyer one (u2.devbuyer1@realtimetypeapprovals.com)"
+  //   },
+  //   {
+  //     id: 103,
+  //     label: "dev hmida (devbuyer1@synaptique.com)"
+  //   }
+  // ]
+  // cb(res);
 }
 
 function addAutocompleteToSearch() {
@@ -245,23 +238,23 @@ function synap_submit() {
 
   //var formData = JSON.stringify($("#synap_form").serializeArray());
   var formData = {};
-  $.each($('#synap_form').serializeArray(), function () {
+  $.each($('#synap_form').serializeArray(), function() {
     formData[this.name] = this.value;
   });
   // formData = JSON.parse(formData);
-  // formData.assignToId = current_user_id;
+  formData.assignToId = current_user_id;
   // formData = JSON.stringify(formData);
   console.log(formData);
   $.ajax({
     type: "post",
-    url: rootAppName + "item/saveOrderDetail?id=" + 962,//current_id
+    url: rootAppName + "item/saveOrderDetail?id=" + current_id, //current_id
     data: formData,
     xhrFields: {
       withCredentials: true
     },
     crossDomain: true,
 
-    success: function () {
+    success: function() {
       $(".synap_loading1").toggle();
 
     },
@@ -282,10 +275,10 @@ function showUpdateModal(id) {
       withCredentials: true
     },
     data: {
-      id: 962 //id
+      id: id
     },
     datatype: "html",
-    success: function (response) {
+    success: function(response) {
 
       $('.synap_update').html("<form id=\"synap_form\" target=\"dummyframe\"><div class=\"hi_synap_i\"></div></form>");
       var res_html;
@@ -296,11 +289,19 @@ function showUpdateModal(id) {
         res_html += $(response).find('#field' + i).html();
 
       }
-      $('.hi_synap_i').html(res_html + "<input type=\"button\" value=\"Submit\" onclick=\"synap_submit()\">");//$(response).find('.block clearfix').text()
-      $("#submissionTarget").datepicker({   dateFormat: "dd/mm/yy" });;
-      $("#submissionEffective").datepicker({   dateFormat: "dd/mm/yy" });;
-      $("#completionTarget").datepicker({   dateFormat: "dd/mm/yy" });;//comment
-      $("#completionEffective").datepicker({   dateFormat: "dd/mm/yy" });;
+      $('.hi_synap_i').html(res_html + "<input type=\"button\" value=\"Submit\" onclick=\"synap_submit()\">"); //$(response).find('.block clearfix').text()
+      $("#submissionTarget").datepicker({
+        dateFormat: "dd/mm/yy"
+      });;
+      $("#submissionEffective").datepicker({
+        dateFormat: "dd/mm/yy"
+      });;
+      $("#completionTarget").datepicker({
+        dateFormat: "dd/mm/yy"
+      });;
+      $("#completionEffective").datepicker({
+        dateFormat: "dd/mm/yy"
+      });;
       $('.hi_synap_i #logo').attr("src", "blawwawg");
       $('.hi_synap_i #comment').css("width", "40%")
       getUsersList(cbUsersList);
@@ -322,12 +323,12 @@ function refresh(f) {
 
 
 
-var main = function () {
+var main = function() {
 
   gmail = new Gmail();
 
   //excute each time the user open an email
-  gmail.observe.on("open_email", function (id, url, body, xhr) {
+  gmail.observe.on("open_email", function(id, url, body, xhr) {
 
     // data_id = gmail.get.email_data(id);
     // email_subject = data_id.subject;
@@ -338,14 +339,14 @@ var main = function () {
     //dummyframe is used to prevent redirection upon submmiting the form
     $('.hi').append('<iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>');
     //console.log(chrome.extension.getURL("/images/logo.png"));
-    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="' + logo_url + '" height="16"><span class="cZ">Gmail Extension</span><span class="cU"> - Stay up to date!</span>'
-      + '</br></br></div><div class="cT"></div></div><div></div><div class=\"hi_synap\"><label for=\"rfqFilterSearch\">Search for an Item: </label></br><input name= \"synap_input\" id=\"rfqFilterSearch\"></div></div></div>');
+    $('.hi').append('<div class="nH hh"><div class="c0"><div class="cV"><div class="cX"><img class="cY" src="' + logo_url + '" height="16"><span class="cZ">Gmail Extension</span><span class="cU"> - Stay up to date!</span>' +
+      '</br></br></div><div class="cT"></div></div><div></div><div class=\"hi_synap\"><label for=\"rfqFilterSearch\">Search for an Item: </label></br><input name= \"synap_input\" id=\"rfqFilterSearch\"></div></div></div>');
     $('.hi').append('<div class="synap_loading" ><img src="' + loading_url + '" width="64" height="64"/></div>')
     $('.hi').append("<div class=\"synap_update\"></div>");
     $('.hi').append('<div class="synap_loading1" ><img src="' + loading_url + '" width="64" height="64"/></div>')
 
     loaded = false;
-    $('#rfqFilterSearch').one('focus', function () {
+    $('#rfqFilterSearch').one('focus', function() {
 
 
       $(".synap_loading").toggle();
@@ -354,15 +355,15 @@ var main = function () {
 
 
     })
-    $('#rfqFilterSearch').select(function () {
+    $('#rfqFilterSearch').select(function() {
       console.log('okioa')
 
     })
 
-    $(document).ajaxStart(function () {
+    $(document).ajaxStart(function() {
       // $(".synap_loading").toggle();
     });
-    $(document).ajaxComplete(function () {
+    $(document).ajaxComplete(function() {
       // $(".synap_loading").toggle();
     });
 
@@ -370,7 +371,7 @@ var main = function () {
 }
 
 //get absolute urls from content script
-document.addEventListener('passurl', function (e) {
+document.addEventListener('passurl', function(e) {
 
   logo_url = e.detail[0].logo_url;
   loading_url = e.detail[0].loading_url;
@@ -380,7 +381,7 @@ document.addEventListener('passurl', function (e) {
 });
 
 
-$(document).ready(function () {
+$(document).ready(function() {
   console.log('in ready');
 
 
@@ -390,4 +391,3 @@ $(document).ready(function () {
 
 //the trigger(first line to get excuted)
 refresh(main);
-
